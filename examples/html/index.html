@@ -7,7 +7,6 @@
 <body>
   <canvas id="histogram" style="width: 500px;height: 500px;">
   </canvas>
-  <script type="module" src="/dist"></script>
   <script type="module">
     import {MultiHistogram} from '/dist';
     const canvasEl = document.getElementById("histogram");
@@ -18,23 +17,46 @@
 
     let table1 = {};
     let table2 = {};
+    let table2max = 0;
     for (let i = 0; i < 50; i++) {
         const v = i < 25 ? getRandomInt(100) + i * 40 : (getRandomInt(100) + 2000 - i * 40);
         const v2 = getRandomInt(300);
         table1[i * 10] = v;
         table2[i * 10] = v2;
+        table2max = Math.max(v2, table2max);
     }
 
-    const histogram = new MultiHistogram([{fillColor: "green", bars: table1}, {fillColor: "red", bars: table2}], {
-      xAxis: {
-        min: 0,
-        max: 500,
-      },
-      xInterval: 10,
-      yAxis: {
-        min: 0,
-        max: 1310,
-      }
+    const histogram = new MultiHistogram([{fillColor: "grey", bars: table1}, {
+        fillColor: "RGBA(211,0,0,0.5)", bars: table2,
+        yAxis: {
+            min: 0,
+            max: table2max * 2 ,
+        },
+    }], {
+        xAxis: {
+            min: 0,
+            max: 500,
+        },
+        xInterval: 10,
+        yAxis: {
+            min: 0,
+            max: 1300,
+        },
+        xGrid: {
+            boundSize: 50,
+            gridCount: 6,
+            smallGridCount: 11,
+        },
+        yGrid: {
+            boundSize: 50,
+            gridCount: 6,
+            smallGridCount: 11,
+        },
+        gridColor: "darkgrey",
+        fontFamily: "Helvetica",
+        fontSize: 20,
+        padding: 20,
+        backgroundColor: "RGBA(240,240,240, 1)"
     });
     histogram.draw(ctx, 500, 500, devicePixelRatio);
 
